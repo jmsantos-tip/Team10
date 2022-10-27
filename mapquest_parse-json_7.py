@@ -1,4 +1,3 @@
-from turtle import back
 import urllib.parse
 import requests
 from colorama import Fore, Back, Style

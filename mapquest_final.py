@@ -4,21 +4,28 @@ from rich.table import Table
 from rich.console import Console
 from colorama import Fore, Back, Style
 
-main_api = "https://www.mapquestapi.com/directions/v2/route?"
-key = "rJA9z4RMMABsDGttX89b20RnA6NBIMGZ"
+main_api = "http://www.mapquestapi.com/directions/v2/alternateroutes?"
+key = "46cjGY1pPvRH1j4A5H0TkABTAtXSsksV"
 
 
 while True:
-    orig = input("Starting Location: ")
+    orig = input(Fore.MAGENTA+"Starting Location: ")
     if orig == "quit" or orig == "q":
         break
     dest = input("Destination: ")
     if dest == "quit" or dest == "q":
         break
-    url = main_api + urllib.parse.urlencode({"key":key, 
-        "from":orig, "to":dest})
+    maxRoute = input("Max Routes: ") # the maximum number of routes to return. def: 1
+    if maxRoute == "quit" or maxRoute == "q":
+        break
+    timeOverage = input("Time Overage: ") # The percentage by which the expected drive time of an alternate is allowed to exceed the expected drive time of the original route. def: 25
+    if timeOverage == "quit" or timeOverage == "q":
+            break
+    print(Style.RESET_ALL)
+    url = main_api + urllib.parse.urlencode({"key": key, "from":orig, "to":dest, "maxRoute": maxRoute, "timeOverage": timeOverage})
+    print(Style.RESET_ALL)
     json_data = requests.get(url).json()
-    print("URL: " + (url))
+    print(Fore.CYAN+"URL: " + (url))
     json_data = requests.get(url).json()
     json_status = json_data["info"]["statuscode"]
     table1 = Table(title="API")
@@ -52,9 +59,9 @@ while True:
     ]
     if json_status == 0:
         rows3 = [
-        [(json_data["route"]["formattedTime"]), (str("{:.2f}".format((json_data["route"]["distance"])*1.61)))]
+        [(json_data["route"]["formattedTime"]), (str("{:.2f}".format((json_data["route"]["distance"])*1.61))), (json_data["route"]["options"]["routeType"])]
         ]
-        column3 = ["Trip Duration", "Kilometers"]
+        column3 = ["Trip Duration", "Kilometers", "Route Type"]
         for column in column1:
             table1.add_column(column)
         for row in rows1:

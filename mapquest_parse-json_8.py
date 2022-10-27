@@ -2,6 +2,7 @@ import urllib.parse
 import requests
 from rich.table import Table
 from rich.console import Console
+from colorama import Fore, Back, Style
 
 main_api = "https://www.mapquestapi.com/directions/v2/route?"
 key = "rJA9z4RMMABsDGttX89b20RnA6NBIMGZ"
@@ -44,6 +45,11 @@ while True:
         [str(json_status), "Refer to:", "https://developer.mapquest.com/documentation/directions-api/status-codes"]
     ]
     column6 = ["Status Code", "Message", "Link"]
+    table7 = Table(title="Direction")
+    column7 = ["Narratives", "Direction"]
+    rows7=[
+        
+    ]
     if json_status == 0:
         rows3 = [
         [(json_data["route"]["formattedTime"]), (str("{:.2f}".format((json_data["route"]["distance"])*1.61)))]
@@ -61,10 +67,17 @@ while True:
             table3.add_column(column)
         for row in rows3:
             table3.add_row(*row, style="bright_green")
+        for each in json_data["route"]["legs"][0]["maneuvers"]:
+           rows7.append([(each["narrative"]), " (" + str("{:.2f}".format((each["distance"])*1.61) + " km)")])
+        for column in column7:
+            table7.add_column(column)
+        for row in rows7:
+            table7.add_row(*row, style="bright_green")
         console = Console()
         console.print(table1)
         console.print(table2)
         console.print(table3)
+        console.print(table7)
     elif json_status == 402:
         for column in column1:
             table4.add_column(column)

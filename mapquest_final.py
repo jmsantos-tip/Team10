@@ -53,7 +53,7 @@ while True:
     ]
     column6 = ["Status Code", "Message", "Link"]
     table7 = Table(title="Direction")
-    column7 = ["Narratives", "Direction"]
+    column7 = ["Narratives", "Direction", "ETA", "Distance"]
     rows7=[
         
     ]
@@ -75,7 +75,7 @@ while True:
         for row in rows3:
             table3.add_row(*row, style="bright_green")
         for each in json_data["route"]["legs"][0]["maneuvers"]:
-           rows7.append([(each["narrative"]), " (" + str("{:.2f}".format((each["distance"])*1.61) + " km)")])
+           rows7.append([(each["narrative"]), (each["directionName"]), (each["formattedTime"]), " (" + str("{:.2f}".format((each["distance"])*1.61) + " km)")])
         for column in column7:
             table7.add_column(column)
         for row in rows7:
